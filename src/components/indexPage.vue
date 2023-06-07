@@ -1,6 +1,8 @@
 <template>
     <div class="container">
         <div class="route-item" v-for="item in arr" @click="navTo(item.path)" :key="item.path">{{ item.name }}</div>
+
+        <a class="footer" href="https://beian.miit.gov.cn/" target="_blank">苏ICP备2022025958号-1</a>
     </div>
 </template>
 
@@ -47,6 +49,12 @@ body {
             height: 30px;
             line-height: 30px;
             text-align: center;
+            cursor: pointer;
+        }
+
+        .footer {
+            position: absolute;
+            bottom: 30px;
             cursor: pointer;
         }
     }
