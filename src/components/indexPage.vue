@@ -1,71 +1,54 @@
 <template>
-    <div class="container">{{ text }}</div>
+    <div class="container">
+        <div class="route-item" v-for="item in arr" @click="navTo(item.path)" :key="item.path">{{ item.name }}</div>
+    </div>
 </template>
 
 <script>
 export default {
+    name: 'indexPage',
     data: () => ({
-        text: '',
-        url: 'https://eq.10jqka.com.cn/mobileuserinfo/app/purchaseIcloud/data/newBondList.json',
+        arr: [
+            {
+                name: '查询可转债',
+                path: 'enquireConvertibleBonds',
+            },
+            {
+                name: '处理DAU数据',
+                path: 'handleDAUData',
+            },
+        ],
     }),
-    mounted() {
-        this.fetchData();
-    },
+    mounted() {},
     methods: {
-        fetchData() {
-            // this.httpRequest(
-            //     {
-            //         method: 'get',
-            //         url: this.url,
-            //         data: {},
-            //         dataType: 'json',
-            //     },
-            //     function (res) {
-            //         console.log(res);
-            //     },
-            //     function () {
-            //         console.log('请求失败');
-            //     }
-            // );
-
-            this.queryData(this.url).then(resp => {
-                let res = JSON.parse(resp);
-                if (res.length) {
-                    let names = '';
-                    res.forEach(el => {
-                        names = `${names}${el.name} `;
-                    });
-                    this.text = `今天有${res.length}只，分别是${names}`;
-                } else {
-                    this.text = '今天没有，滚回去打工';
-                }
+        navTo(name) {
+            this.$router.push({
+                name,
             });
-        },
-        queryData(url) {
-            //  #   1.1 创建一个Promise实例
-            var p = new Promise(function (resolve, reject) {
-                var xhr = new XMLHttpRequest();
-                xhr.onreadystatechange = function () {
-                    if (xhr.readyState != 4) return;
-                    if (xhr.readyState == 4 && xhr.status == 200) {
-                        // # 1.2 处理正常的情况
-                        resolve(xhr.responseText);
-                    } else {
-                        // # 1.3 处理异常情况
-                        reject('服务器错误');
-                    }
-                };
-                xhr.open('get', url);
-                xhr.send(null);
-            });
-            return p;
         },
     },
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 body {
     overflow: hidden;
+
+    .container {
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+
+        .route-item {
+            width: 150px;
+            height: 30px;
+            line-height: 30px;
+            text-align: center;
+            cursor: pointer;
+        }
+    }
 }
 </style>

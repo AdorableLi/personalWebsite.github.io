@@ -27,6 +27,16 @@ const routes = [
         name: 'indexPage',
         component: () => import('../components/indexPage.vue'),
     },
+    {
+        path: '/enquireConvertibleBonds',
+        name: 'enquireConvertibleBonds',
+        component: () => import('../components/enquireConvertibleBonds.vue'),
+    },
+    {
+        path: '/handleDAUData',
+        name: 'handleDAUData',
+        component: () => import('../components/handleDAUData.vue'),
+    },
     // {
     //     path: '/indexPage',
     //     name: 'indexPage',
