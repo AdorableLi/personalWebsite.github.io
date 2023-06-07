@@ -300,7 +300,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 table {
     border-collapse: collapse;
 }
@@ -323,29 +323,28 @@ body {
     background: #fff;
     padding: 20px;
     min-height: 100vh;
+}
 
-    > div,
-    > h2 {
-        width: fit-content;
-    }
+.container > div,
+.container > h2 {
+    width: fit-content;
+}
 
-    .button-item {
-        display: flex;
-        flex-direction: row;
+.button-item {
+    display: flex;
+    flex-direction: row;
+}
+.button-item > div:nth-child(1) {
+    margin-right: 20px;
+}
 
-        > div:nth-child(1) {
-            margin-right: 20px;
-        }
-
-        .button {
-            padding: 4px 10px;
-            color: white;
-            background: #017dff;
-            cursor: pointer;
-            border-radius: 5px;
-            font-size: 13px;
-            font-weight: bolder;
-        }
-    }
+.button {
+    padding: 4px 10px;
+    color: white;
+    background: #017dff;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 13px;
+    font-weight: bolder;
 }
 </style>

@@ -32,31 +32,29 @@ export default {
 };
 </script>
 
-<style scoped lang="scss">
+<style scoped>
 body {
     overflow: hidden;
+}
+.container {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+.route-item {
+    width: 150px;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    cursor: pointer;
+}
 
-    .container {
-        width: 100vw;
-        height: 100vh;
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
-        align-items: center;
-
-        .route-item {
-            width: 150px;
-            height: 30px;
-            line-height: 30px;
-            text-align: center;
-            cursor: pointer;
-        }
-
-        .footer {
-            position: absolute;
-            bottom: 30px;
-            cursor: pointer;
-        }
-    }
+.footer {
+    position: absolute;
+    bottom: 30px;
+    cursor: pointer;
 }
 </style>
