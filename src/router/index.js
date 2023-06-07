@@ -37,15 +37,6 @@ const routes = [
         name: 'handleDAUData',
         component: () => import('../components/handleDAUData.vue'),
     },
-    // {
-    //     path: '/indexPage',
-    //     name: 'indexPage',
-    //     component: resolve => require(['../components/indexPage'], resolve),
-    // },
-    // {
-    //     path: '*',
-    //     redirect: '/indexPage',
-    // },
 ];
 
 const router = createRouter({
