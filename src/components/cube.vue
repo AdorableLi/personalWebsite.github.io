@@ -1,6 +1,5 @@
 <template>
-    <!-- <div class="container" :style="hasFetched ? cssVars : cssVarsDefault"> -->
-    <div class="container" :style="cssVars" v-if="hasFetched">
+    <div class="container" :style="hasFetched ? cssVars : cssVarsDefault">
         <div class="cube cube1">
             <div class="front"></div>
             <div class="right"></div>
@@ -20,7 +19,6 @@ export default {
     name: 'cube',
     data: () => ({
         cssVarsDefault: {
-            '--status': 'paused',
             '--default': '100px', // 立方体面的基准长宽
             '--color': '0, 255, 243',
             '--percentage': '100px', // 外层大立方体的长宽
@@ -30,7 +28,7 @@ export default {
             '--percentageSmallTran': '37px', // 内层小立方体的偏移距离
             '--percentageSmallTranNegative': '-37px', // 内层小立方体的偏移距离（负）
         }, // 立方体默认css
-        hasFetched: true, // 是否加载完成
+        hasFetched: false, // 是否加载完成
     }),
     props: {
         color: {
@@ -48,10 +46,10 @@ export default {
     },
     computed: {
         cssVars() {
-            const { color, defaultNum, percentage } = this;
             this.hasFetched = true;
+            const { color, defaultNum, percentage } = this;
+            console.log(color, defaultNum, percentage);
             return {
-                '--status': 'running',
                 '--default': `${defaultNum}px`, // 立方体面的基准长宽
                 '--color': color,
                 '--percentage': `${percentage}px`, // 外层大立方体的长宽
@@ -63,7 +61,11 @@ export default {
             };
         },
     },
-    mounted() {},
+    mounted() {
+        setTimeout(() => {
+            console.log(this.hasFetched);
+        }, 3000);
+    },
     methods: {},
 };
 </script>
@@ -114,29 +116,29 @@ export default {
         }
 
         > .front {
-            animation: front1 2s ease var(--status);
+            animation: front1 2s ease;
             border: 1px solid rgba($color: var(--color), $alpha: 0.9);
             transform: translateZ(var(--percentageTran));
         }
 
         > .left {
-            animation: left1 2s ease var(--status);
+            animation: left1 2s ease;
             transform: translateX(var(--percentageTranNegative)) rotateY(-90deg);
         }
 
         > .right {
-            animation: right1 2s ease var(--status);
+            animation: right1 2s ease;
             transform: translateX(var(--percentageTran)) rotateY(90deg);
             border: 1px solid rgba($color: var(--color), $alpha: 0.9);
         }
 
         > .back {
-            animation: back1 2s ease var(--status);
+            animation: back1 2s ease;
             transform: translateZ(var(--percentageTranNegative));
         }
 
         > .up {
-            animation: up1 2s ease var(--status);
+            animation: up1 2s ease;
             transform: translateY(var(--percentageTranNegative)) rotateX(90deg);
             border: 1px solid rgba($color: var(--color), $alpha: 0.9);
         }
@@ -161,29 +163,29 @@ export default {
         }
 
         > .front {
-            animation: front2 2s ease var(--status);
+            animation: front2 2s ease;
             transform: translateZ(var(--percentageSmallTran));
             background: linear-gradient(to top, rgba($color: var(--color), $alpha: 0.65) 0, transparent 100%);
         }
 
         > .left {
-            animation: left2 2s ease var(--status);
+            animation: left2 2s ease;
             transform: translateX(var(--percentageSmallTranNegative)) rotateY(-90deg);
         }
 
         > .right {
-            animation: right2 2s ease var(--status);
+            animation: right2 2s ease;
             transform: translateX(var(--percentageSmallTran)) rotateY(90deg);
             background: linear-gradient(to top, rgba($color: var(--color), $alpha: 0.65) 0, transparent 100%);
         }
 
         > .back {
-            animation: back2 2s ease var(--status);
+            animation: back2 2s ease;
             transform: translateZ(var(--percentageSmallTranNegative));
         }
 
         > .up {
-            animation: up2 2s ease var(--status);
+            animation: up2 2s ease;
             background: rgba(var(--color), $alpha: 0.65);
             transform: translateY(var(--percentageSmallTranNegative)) rotateX(90deg);
         }

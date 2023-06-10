@@ -18,7 +18,7 @@ export default {
     computed: {},
     mounted() {
         setTimeout(() => {
-            this.percentage = 40;
+            this.percentage = 50;
         }, 1000);
     },
     methods: {},
