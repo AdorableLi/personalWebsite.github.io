@@ -25,17 +25,22 @@ const routes = [
     {
         path: '/indexPage',
         name: 'indexPage',
-        component: () => import('../components/indexPage.vue'),
+        component: () => import('../views/indexPage.vue'),
     },
     {
         path: '/enquireConvertibleBonds',
         name: 'enquireConvertibleBonds',
-        component: () => import('../components/enquireConvertibleBonds.vue'),
+        component: () => import('../views/enquireConvertibleBonds.vue'),
     },
     {
         path: '/handleDAUData',
         name: 'handleDAUData',
-        component: () => import('../components/handleDAUData.vue'),
+        component: () => import('../views/handleDAUData.vue'),
+    },
+    {
+        path: '/showCube',
+        name: 'showCube',
+        component: () => import('../views/showCube.vue'),
     },
 ];
 

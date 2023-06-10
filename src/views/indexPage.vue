@@ -19,6 +19,10 @@ export default {
                 name: '处理DAU数据',
                 path: 'handleDAUData',
             },
+            {
+                name: 'css构筑立方体',
+                path: 'showCube',
+            },
         ],
     }),
     mounted() {},
