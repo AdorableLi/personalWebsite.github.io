@@ -1,6 +1,6 @@
 <template>
     <div class="show-cube">
-        <cube :percentage="percentage" :color="'0, 255, 243'"></cube>
+        <cube :cubeObj="cubeObj"></cube>
     </div>
 </template>
 
@@ -13,13 +13,27 @@ export default {
         cube,
     },
     data: () => ({
-        percentage: 0,
+        cubeObj: {
+            unit: '人', // 单位
+            color: 'transparent', // 立方体颜色
+            number: 0, // 人数
+            percentage: 0, // 数据的百分比（决定了立方体的高度）
+            title: '', // 字段名
+            introduce: '', // 字段名介绍
+        },
     }),
     computed: {},
     mounted() {
         setTimeout(() => {
-            this.percentage = 50;
-        }, 1000);
+            this.cubeObj = {
+                unit: '人', // 单位
+                color: '0, 255, 243', // 立方体颜色
+                number: 77, // 人数
+                percentage: 40, // 数据的百分比（决定了立方体的高度）
+                title: '字段名', // 字段名
+                introduce: '字段名介绍', // 字段名介绍
+            };
+        }, 2000);
     },
     methods: {},
 };
