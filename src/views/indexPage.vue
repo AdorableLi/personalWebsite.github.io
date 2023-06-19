@@ -23,6 +23,10 @@ export default {
                 name: 'css构筑立方体',
                 path: 'showCube',
             },
+            {
+                name: 'canvas缩放与拖动',
+                path: 'convertImgIntoCanvas',
+            },
         ],
     }),
     mounted() {},

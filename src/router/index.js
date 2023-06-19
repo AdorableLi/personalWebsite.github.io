@@ -42,6 +42,11 @@ const routes = [
         name: 'showCube',
         component: () => import('../views/showCube.vue'),
     },
+    {
+        path: '/convertImgIntoCanvas',
+        name: 'convertImgIntoCanvas',
+        component: () => import('../views/convertImgIntoCanvas.vue'),
+    },
 ];
 
 const router = createRouter({
