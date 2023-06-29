@@ -37,39 +37,27 @@ class Scene {
     transSet = { x: 0, y: 0 }; // 内容的偏移量
     x = 0; // 记录鼠标点击Canvas时的横坐标
     y = 0; // 记录鼠标点击Canvas时的纵坐标
-    img = '';
     multiple = 1; // 缩放率
     outDomCoordinate = ''; // 最外层容器相对于浏览器窗口的各项数据
 
     constructor(
-        id,
         options = {
-            imgUrl: '',
-            width: 0,
             height: 0,
             shellName: '',
             outDomName: '',
         }
     ) {
-        // 设置canvas的相关信息
-        this.canvas = document.getElementById(id);
-        this.options = options;
-        this.width = options.width;
-        this.height = options.height;
-        this.canvas.width = options.width;
-        this.canvas.height = options.height;
-        this.ctx = this.canvas.getContext('2d');
-
         // 设置包裹canvas的外层div信息
         this.shell = document.getElementById(options.shellName);
-        this.handleShellWidthHeight();
+        this.shell.style.width = `324px`;
+        this.shell.style.height = `${options.height}px`;
 
         // 设置最外层容器
         this.outDom = document.getElementById(options.outDomName);
 
         // 绑定各类事件
-        this.canvas.addEventListener('mousedown', this.onMousedown);
-        this.canvas.addEventListener('wheel', this.onWheel);
+        this.shell.addEventListener('mousedown', this.onMousedown);
+        this.shell.addEventListener('wheel', this.onWheel);
 
         // 记录最外层容器相对于浏览器窗口的各项数据
         const { top, left, right, bottom } = this.outDom.getBoundingClientRect();
@@ -136,29 +124,8 @@ class Scene {
         };
     };
 
-    // 重绘
-    draw() {
-        if (!this.img) {
-            let img = new Image(); // 创建一个<img>元素
-            img.src = this.options.imgUrl; // 设置图片源地址
-            img.onload = () => {
-                this.img = img;
-                this.ctx.drawImage(img, 0, 0, this.canvas.width, this.canvas.height);
-            };
-        } else {
-            this.ctx.drawImage(this.img, 0, 0, this.canvas.width, this.canvas.height);
-        }
-    }
-
-    // 清除
-    clear() {
-        this.canvas.width = this.width;
-    }
-
     // 画图
     paint() {
-        this.clear();
-
         // 计算最终可偏移的偏移量
         const { transX, transY } = this.handleBorder();
         this.transSet = {
@@ -167,7 +134,6 @@ class Scene {
         };
 
         this.handleTransform();
-        this.draw();
     }
 
     // 处理边界，使图片不能拖动出边界
@@ -199,16 +165,6 @@ class Scene {
         return { transX, transY };
     };
 
-    // 处理canvas外层的宽高以及canvas的缩放率（324，576为最外层容器固定宽高）
-    handleShellWidthHeight = () => {
-        let _width = 324,
-            _multiple = countNum(324, this.options.width, 'div', 6),
-            _height = countNum(this.options.height, _multiple, 'mul', 6);
-        this.canvas.style.transform = `scale(${_multiple})`;
-        this.shell.style.width = `${_width}px`;
-        this.shell.style.height = `${_height}px`;
-    };
-
     // 处理图像的偏移和缩放
     handleTransform = () => {
         this.shell.style.transform = `scale(${this.multiple}) translate(${this.transSet.x}px, ${this.transSet.y}px)`;
@@ -226,21 +182,31 @@ export default {
     }),
     computed: {},
     mounted() {
-        // const imgUrl = 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100';
         const imgUrl =
             'https://ts1.cn.mm.bing.net/th/id/R-C.d8dfd08893b58d08d74b38ad8870a48d?rik=9KBqff6Rai035Q&riu=http%3a%2f%2fstatic.cntonan.com%2fuploadfile%2f2019%2f0214%2f20190214104244pwm1xxsdikh.jpg&ehk=MOxI2n5nY44gO%2fKsNYWAuEBvcRwSmkRVNb4dTS6Gk%2bY%3d&risl=&pid=ImgRaw&r=0';
+        const imgWidth = 1125, // 图片原始宽
+            imgHeight = 2436; // 图片原始高
 
+        const { width, height, multiple } = this.handleShellWidthHeight(imgWidth, imgHeight);
         let img = {
-            imgUrl,
-            // width: 766,
-            // height: 766,
-            width: 1125,
-            height: 2436,
+            height,
             shellName: 'canvas-shell',
             outDomName: 'img-container',
         };
-        let scene = new Scene('canvas', img);
-        scene.draw();
+        new Scene(img);
+
+        let canvas = document.getElementById('canvas');
+        let ctx = canvas.getContext('2d');
+
+        let image = new Image(); // 创建一个<img>元素
+        image.src = imgUrl; // 设置图片源地址
+        image.onload = () => {
+            ctx.drawImage(image, 0, 0, imgWidth, imgHeight);
+        };
+
+        canvas.width = imgWidth;
+        canvas.height = imgHeight;
+        canvas.style.transform = `scale(${multiple})`;
     },
     methods: {
         handleRemove(file, fileList) {
@@ -257,6 +223,14 @@ export default {
         },
         beforeRemove(file, fileList) {
             return this.$confirm(`确定移除 ${file.name}？`);
+        },
+
+        // 处理canvas外层的宽高以及canvas的缩放率（324，576为最外层容器固定宽高）
+        handleShellWidthHeight(domWidth, domHeight) {
+            let width = 324,
+                multiple = countNum(324, domWidth, 'div', 6),
+                height = countNum(domHeight, multiple, 'mul', 6);
+            return { width, height, multiple };
         },
     },
 };
