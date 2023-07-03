@@ -9,27 +9,36 @@
 		</div>
  -->
         <h2>读取excel（仅读取第一个sheet）</h2>
-        <div class="mt-sm">
-            <input type="file" id="file" style="display: none" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
-            <!-- <a href="javascript:selectFile()">加载本地excel文件</a> -->
-            <!-- <a href="javascript:loadRemoteFile(&#39;./sample/sample.xlsx&#39;)">加载远程excel文件</a> -->
+
+        <div v-show="!areaSign">
+            <div>请选择区域</div>
+            <div class="button-item">
+                <div class="button" v-for="item in areaSignArr" :key="item.label" @click="chooseArea(item.label)">{{ item.name }}</div>
+            </div>
         </div>
+        <div v-show="areaSign">
+            <div class="mt-sm">
+                <input type="file" id="file" style="display: none" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
+                <!-- <a href="javascript:selectFile()">加载本地excel文件</a> -->
+                <!-- <a href="javascript:loadRemoteFile(&#39;./sample/sample.xlsx&#39;)">加载远程excel文件</a> -->
+            </div>
 
-        <!-- <div>结果输出：（下面表格可直接编辑导出）</div> -->
+            <!-- <div>结果输出：（下面表格可直接编辑导出）</div> -->
 
-        <!-- 上面读取的表格您可以直接编辑，编辑后点击保存即可导出excel文件。 -->
-        <!-- <div class="mt-sm" style="padding-bottom: 40px">
+            <!-- 上面读取的表格您可以直接编辑，编辑后点击保存即可导出excel文件。 -->
+            <!-- <div class="mt-sm" style="padding-bottom: 40px">
             <input type="button" @click="exportExcel()" value="保存" />
         </div> -->
 
-        <!-- <div id="result" contenteditable=""></div> -->
+            <!-- <div id="result" contenteditable=""></div> -->
 
-        <div class="button-item">
-            <div class="button" @click="selectFile">加载本地excel文件</div>
-            <div class="button" @click="exportExcel1()">导出excel</div>
+            <div class="button-item">
+                <div class="button" @click="selectFile">加载本地excel文件</div>
+                <div class="button" @click="exportExcel1()">导出excel</div>
+            </div>
+
+            <div id="result" contenteditable="false"></div>
         </div>
-
-        <div id="result" contenteditable="false"></div>
 
         <!-- <h2>导出带单元格合并的excel</h2>
 		<input type="button" value="导出" onclick="exportSpecialExcel()"> -->
@@ -41,30 +50,58 @@
 import * as XLSX from 'xlsx';
 import { countNum } from '@/utils/utils';
 
+const AREA_OBJ = {
+    1: [
+        2413, 3610, 3593, 3582, 3771, 3440, 3693, 3554, 3541, 3733, 3694, 3696, 3568, 3533, 3583, 3761, 3623, 3603, 3446, 3717, 3701, 3510, 3575, 3605, 3721, 3704, 3687, 3734,
+        3625, 3616, 2387, 3735, 3776, 3751, 3576, 3531, 3607, 3755, 3557, 3719, 3786, 3772, 3609,
+    ], // 华中 瑶
+    2: [
+        3516, 2439, 3515, 3523, 3539, 3642, 3514, 3558, 3538, 3549, 3537, 3518, 3581, 3517, 3507, 2421, 3692, 3572, 2422, 2415, 3536, 3580, 3528, 3634, 3742, 3521, 2391, 3713,
+        3563, 3635, 3740, 3728, 3569, 3546, 3685, 3718, 3741, 3750, 3727, 3726, 3667, 3730, 3633, 3632, 3736, 3756, 3757, 3766, 3781, 3778, 3783,
+    ], // 华南 桂
+}; // 区域列表
+
 export default {
     name: 'handleDAUData',
     components: {},
     data: () => ({
         resultExeclData: [], // 表格数据
+        areaSign: '', // 用户选中的区域标识
+        areaSignArr: [
+            {
+                label: 1,
+                name: '华中',
+            },
+            {
+                label: 2,
+                name: '华南',
+            },
+        ], // 标识列表
     }),
     computed: {},
-    mounted() {
-        let that = this;
-        document.getElementById('file').addEventListener('change', function (e) {
-            var files = e.target.files;
-            if (files.length == 0) return;
-            var f = files[0];
-            if (!/\.xlsx$/g.test(f.name)) {
-                alert('仅支持读取xlsx格式！');
-                return;
-            }
-            that.readWorkbookFromLocalFile(f, function (workbook) {
-                that.readWorkbook(workbook);
-            });
-        });
-        // this.loadRemoteFile('./sample/test.xlsx');
-    },
+    mounted() {},
     methods: {
+        initExecl() {
+            let that = this;
+            document.getElementById('file').addEventListener('change', function (e) {
+                var files = e.target.files;
+                if (files.length == 0) return;
+                var f = files[0];
+                if (!/\.xlsx$/g.test(f.name)) {
+                    alert('仅支持读取xlsx格式！');
+                    return;
+                }
+                that.readWorkbookFromLocalFile(f, function (workbook) {
+                    that.readWorkbook(workbook);
+                });
+            });
+            // this.loadRemoteFile('./sample/test.xlsx');
+        },
+        // 选择区域标识
+        chooseArea(e) {
+            this.areaSign = e;
+            this.initExecl();
+        },
         selectFile() {
             document.getElementById('file').click();
         },
@@ -75,7 +112,6 @@ export default {
             reader.onload = function (e) {
                 var data = e.target.result;
                 var workbook = XLSX.read(data, { type: 'binary' });
-                // console.log(workbook)
                 if (callback) callback(workbook);
             };
             reader.readAsBinaryString(file);
@@ -112,20 +148,16 @@ export default {
             var sheetNames = workbook.SheetNames; // 工作表名称集合
             var worksheet = workbook.Sheets[sheetNames[0]]; // 这里我们只读取第一张sheet
             var csv = XLSX.utils.sheet_to_csv(worksheet);
-            // console.log(csv)
             document.getElementById('result').innerHTML = this.csv2table(csv);
         },
 
         // 处理所需列的对照对象
         handleColumnData(arr, idx) {
             let _result = [idx, arr[2], arr[3], arr[5], arr[7]];
-            // _indexArr = [3,5,7,21,22,24,25,27,28];
-            let _orderNumOne = countNum(arr[21], arr[24], 'add', 2),
-                _orderNumTwo = countNum(_orderNumOne, arr[28], 'add', 2);
-            _result.push(Number(_orderNumTwo));
-            let _orderPriceOne = countNum(arr[22], arr[25], 'add', 2),
-                _orderPriceTwo = countNum(_orderPriceOne, arr[27], 'add', 2);
-            _result.push(_orderPriceTwo);
+            let _orderNum = countNum(arr[21], arr[27], 'add', 2);
+            _result.push(Number(_orderNum));
+            let _orderPrice = countNum(arr[22], arr[28], 'add', 2);
+            _result.push(_orderPrice);
             if (idx === 0) {
                 _result[5] = '订单总数';
                 _result[6] = '销售总额';
@@ -135,10 +167,7 @@ export default {
 
         // 将行数据排序
         sortRows(rows) {
-            const _sortMallArr = [
-                3516, 2439, 3515, 3523, 3539, 3642, 3514, 3558, 3538, 3549, 3537, 3518, 3581, 3517, 3507, 2421, 3692, 3572, 2422, 2415, 3536, 3580, 3528, 3634, 3742, 3521, 2391,
-                3713, 3563, 3635, 3740, 3728, 3569, 3546, 3685, 3718, 3741, 3750, 3727, 3726, 3667, 3730, 3633, 3632, 3736, 3756, 3757, 3766, 3781, 3783,
-            ];
+            const _sortMallArr = AREA_OBJ[this.areaSign];
             let _rowsObj = new Map();
             for (let i = 0; i < rows.length; i++) {
                 let columns = rows[i].split(',');
@@ -151,7 +180,7 @@ export default {
                 }
             }
             let _sortedArr = [_rowsObj.get('title')];
-            for (let i = 0; i < _sortMallArr.length; i++) {
+            for (let i = 0; i < Math.round(_sortMallArr.length + 1); i++) {
                 _sortedArr.push(_rowsObj.get(String(_sortMallArr[i])));
             }
             return _sortedArr;
@@ -164,7 +193,6 @@ export default {
             rows = this.sortRows(rows);
             rows.pop(); // 最后一行没用的
             this.resultExeclData = rows;
-            // console.log(rows);
             rows.forEach(function (row, idx) {
                 if (idx == 0) {
                     // 添加列索引
@@ -187,7 +215,6 @@ export default {
         },
 
         table2csv(table) {
-            console.log(table);
             var csv = [];
             table.getElementsByTagName('tr').each(function () {
                 var temp = [];
