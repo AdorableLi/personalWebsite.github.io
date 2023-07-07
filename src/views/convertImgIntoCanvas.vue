@@ -2,8 +2,8 @@
     <div class="container">
         <div class="">此页面除canvas拖动缩放以外的功能均待实现</div>
         <div class="scale-button">
-            <button @click="zoom('add')">+</button>
-            <button @click="zoom('sub')">-</button>
+            <button @click="zoom(-1)">+</button>
+            <button @click="zoom(1)">-</button>
         </div>
         <el-upload
             class="upload-demo"
@@ -171,6 +171,8 @@ class Scene {
     };
 }
 
+let canvasContainer;
+
 export default {
     name: 'convertImgIntoCanvas',
     components: {},
@@ -193,7 +195,7 @@ export default {
             shellName: 'canvas-shell',
             outDomName: 'img-container',
         };
-        new Scene(img);
+        canvasContainer = new Scene(img);
 
         let canvas = document.getElementById('canvas');
         let ctx = canvas.getContext('2d');
@@ -231,6 +233,12 @@ export default {
                 multiple = countNum(324, domWidth, 'div', 6),
                 height = countNum(domHeight, multiple, 'mul', 6);
             return { width, height, multiple };
+        },
+        zoom(type) {
+            let _obj = {
+                deltaY: type,
+            };
+            canvasContainer.onWheel(_obj);
         },
     },
 };
