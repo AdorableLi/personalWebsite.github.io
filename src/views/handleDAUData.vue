@@ -82,17 +82,16 @@ export default {
     mounted() {},
     methods: {
         initExecl() {
-            let that = this;
-            document.getElementById('file').addEventListener('change', function (e) {
-                var files = e.target.files;
+            document.getElementById('file').addEventListener('change', e => {
+                const { files } = e.target;
                 if (files.length == 0) return;
-                var f = files[0];
+                const f = files[0];
                 if (!/\.xlsx$/g.test(f.name)) {
                     alert('仅支持读取xlsx格式！');
                     return;
                 }
-                that.readWorkbookFromLocalFile(f, function (workbook) {
-                    that.readWorkbook(workbook);
+                this.readWorkbookFromLocalFile(f, workbook => {
+                    this.readWorkbook(workbook);
                 });
             });
             // this.loadRemoteFile('./sample/test.xlsx');
@@ -154,9 +153,9 @@ export default {
         // 处理所需列的对照对象
         handleColumnData(arr, idx) {
             let _result = [idx, arr[2], arr[3], arr[5], arr[7]];
-            let _orderNum = countNum(arr[21], arr[27], 'add', 2);
+            let _orderNum = countNum(arr[21], arr[28], 'add', 2);
             _result.push(Number(_orderNum));
-            let _orderPrice = countNum(arr[22], arr[28], 'add', 2);
+            let _orderPrice = countNum(arr[22], arr[27], 'add', 2);
             _result.push(_orderPrice);
             if (idx === 0) {
                 _result[5] = '订单总数';
