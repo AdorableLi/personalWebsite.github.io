@@ -59,7 +59,15 @@ class Scene {
         this.shell.addEventListener('mousedown', this.onMousedown);
         this.shell.addEventListener('wheel', this.onWheel);
 
-        // 记录最外层容器相对于浏览器窗口的各项数据
+        this.handleOutDomRect();
+
+        // 初始化最大偏移量
+        this.handleOffset();
+        this.handleTransform();
+    }
+
+    // 记录最外层容器相对于浏览器窗口的各项数据
+    handleOutDomRect = () => {
         const { top, left, right, bottom } = this.outDom.getBoundingClientRect();
         this.outDomCoordinate = {
             outDomTop: top,
@@ -67,10 +75,7 @@ class Scene {
             outDomRight: right,
             outDomBottom: bottom,
         };
-
-        // 初始化最大偏移量
-        this.handleOffset();
-    }
+    };
 
     // 鼠标按下
     onMousedown = e => {
@@ -140,25 +145,29 @@ class Scene {
     handleBorder = () => {
         let transX, transY;
         // 拿到内容和最外层容器相对于浏览器窗口的距离
-        const { top, left, right, bottom } = this.shell.getBoundingClientRect(),
+        const { top, left, right, bottom, height } = this.shell.getBoundingClientRect(),
             { outDomTop, outDomLeft, outDomRight, outDomBottom } = this.outDomCoordinate;
         // 处理y轴偏移量
         if (top < outDomTop && bottom > outDomBottom) {
-            transY = this.transSet.y;
-        } else if (top >= outDomTop && bottom > outDomBottom) {
             transY = Math.min(`${this.maxOffset.y}`, this.transSet.y);
+        } else if (top > outDomTop && bottom < outDomBottom) {
+            if (this.transSet.y > 0) {
+                transY = Math.min(`${-this.maxOffset.y}`, this.transSet.y);
+            } else {
+                transY = Math.max(`${this.maxOffset.y}`, this.transSet.y);
+            }
+        } else if (top >= outDomTop && bottom > outDomBottom) {
+            transY = Math.min(this.maxOffset.y, this.transSet.y);
         } else if (top < outDomTop && bottom <= outDomBottom) {
-            transY = Math.max(`-${this.maxOffset.y}`, this.transSet.y);
+            transY = Math.max(`${-this.maxOffset.y}`, this.transSet.y);
         } else if (top == outDomTop && bottom == outDomBottom) {
             transY = 0;
         }
         // 处理x轴偏移量
-        if (left < outDomLeft && right > outDomRight) {
-            transX = this.transSet.x;
-        } else if (left >= outDomLeft && right > outDomRight) {
+        if ((left < outDomLeft && right > outDomRight) || (left >= outDomLeft && right > outDomRight)) {
             transX = Math.min(`${this.maxOffset.x}`, this.transSet.x);
         } else if (left < outDomLeft && right <= outDomRight) {
-            transX = Math.max(`-${this.maxOffset.x}`, this.transSet.x);
+            transX = Math.max(`${-this.maxOffset.x}`, this.transSet.x);
         } else if (left == outDomLeft && right == outDomRight) {
             transX = 0;
         }
@@ -184,10 +193,16 @@ export default {
     }),
     computed: {},
     mounted() {
-        const imgUrl =
-            'https://ts1.cn.mm.bing.net/th/id/R-C.d8dfd08893b58d08d74b38ad8870a48d?rik=9KBqff6Rai035Q&riu=http%3a%2f%2fstatic.cntonan.com%2fuploadfile%2f2019%2f0214%2f20190214104244pwm1xxsdikh.jpg&ehk=MOxI2n5nY44gO%2fKsNYWAuEBvcRwSmkRVNb4dTS6Gk%2bY%3d&risl=&pid=ImgRaw&r=0';
-        const imgWidth = 1125, // 图片原始宽
-            imgHeight = 2436; // 图片原始高
+        // const imgUrl =
+        //     'https://ts1.cn.mm.bing.net/th/id/R-C.d8dfd08893b58d08d74b38ad8870a48d?rik=9KBqff6Rai035Q&riu=http%3a%2f%2fstatic.cntonan.com%2fuploadfile%2f2019%2f0214%2f20190214104244pwm1xxsdikh.jpg&ehk=MOxI2n5nY44gO%2fKsNYWAuEBvcRwSmkRVNb4dTS6Gk%2bY%3d&risl=&pid=ImgRaw&r=0';
+        // const imgWidth = 1125, // 图片原始宽
+        //     imgHeight = 2436; // 图片原始高
+
+        const imgUrl = 'https://img1.baidu.com/it/u=3861296666,2632273690&fm=253&fmt=auto&app=138&f=JPEG?w=667&h=500';
+        const imgWidth = 667, // 图片原始宽
+            imgHeight = 500; // 图片原始高
+        // const imgWidth = 1280, // 图片原始宽
+        //     imgHeight = 1707; // 图片原始高
 
         const { width, height, multiple } = this.handleShellWidthHeight(imgWidth, imgHeight);
         let img = {
