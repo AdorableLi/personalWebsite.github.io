@@ -18,7 +18,7 @@
         </div>
         <div v-show="areaSign">
             <div class="mt-sm">
-                <input type="file" id="file" style="display: none" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
+                <input type="file" id="file" multiple="multiple" style="display: none" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
                 <!-- <a href="javascript:selectFile()">加载本地excel文件</a> -->
                 <!-- <a href="javascript:loadRemoteFile(&#39;./sample/sample.xlsx&#39;)">加载远程excel文件</a> -->
             </div>
@@ -84,7 +84,7 @@ export default {
         initExecl() {
             document.getElementById('file').addEventListener('change', e => {
                 const { files } = e.target;
-                if (files.length == 0) return;
+                if (!files.length) return;
                 const f = files[0];
                 if (!/\.xlsx$/g.test(f.name)) {
                     alert('仅支持读取xlsx格式！');
