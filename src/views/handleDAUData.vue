@@ -165,7 +165,7 @@ const readWorkbook = (name, workbook) => {
         data: rows,
     };
     resultExeclData.value.push(_obj);
-    // console.log(resultExeclData.value);
+    document.getElementById('result').innerHTML = '行了，处理好了，点导出吧';
 };
 
 // 将csv转换成表格
@@ -322,6 +322,10 @@ const exportExcel = () => {
 };
 
 const exportExcel1 = () => {
+    if (!resultExeclData.value.length) {
+        window.alert('再不喂数据就导出，捶你信不信');
+        return;
+    }
     handleMultilist();
     const sheet = {
         访问用户数: XLSX.utils.aoa_to_sheet(arrOne.value),
@@ -339,9 +343,7 @@ const handleMultilist = () => {
     });
     for (let i = 0; i < data.length; i++) {
         const _obj = data[i].data;
-        // console.log(_obj);
         for (let j = 1; j < _obj.length; j++) {
-            // console.log(_obj[j]);
             const _objTwo = _obj[j];
             // 当循环第一张表时加上mall_id和商场名称
             if (i == 0) {
