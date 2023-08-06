@@ -35,6 +35,7 @@
             <div class="button-item">
                 <div class="button" @click="selectFile">加载本地excel文件</div>
                 <div class="button" @click="exportExcel1()">导出excel</div>
+                <div class="button" @click="clearExcel()">重新来</div>
             </div>
 
             <div id="result" contenteditable="false"></div>
@@ -110,6 +111,13 @@ const chooseArea = e => {
 };
 const selectFile = () => {
     document.getElementById('file').click();
+};
+
+// 清除上一次的表格数据
+const clearExcel = () => {
+    areaSign.value = 0;
+    resultExeclData.value = [];
+    document.getElementById('result').innerHTML = '';
 };
 
 // 读取本地excel文件
@@ -415,18 +423,16 @@ body {
 .button-item {
     display: flex;
     flex-direction: row;
-    > div:nth-child(1) {
+
+    .button {
+        padding: 4px 10px;
+        color: white;
+        background: #017dff;
+        cursor: pointer;
+        border-radius: 5px;
+        font-size: 13px;
+        font-weight: bolder;
         margin-right: 20px;
     }
-}
-
-.button {
-    padding: 4px 10px;
-    color: white;
-    background: #017dff;
-    cursor: pointer;
-    border-radius: 5px;
-    font-size: 13px;
-    font-weight: bolder;
 }
 </style>
