@@ -47,6 +47,11 @@ const routes = [
         name: 'convertImgIntoCanvas',
         component: () => import('../views/convertImgIntoCanvas.vue'),
     },
+    {
+        path: '/muyu',
+        name: 'muyu',
+        component: () => import('../views/muyu.vue'),
+    },
 ];
 
 const router = createRouter({

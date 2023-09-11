@@ -27,6 +27,10 @@ export default {
                 name: 'canvas缩放与拖动',
                 path: 'convertImgIntoCanvas',
             },
+            {
+                name: '电子木鱼',
+                path: 'muyu',
+            },
         ],
     }),
     mounted() {},
