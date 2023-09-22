@@ -10,9 +10,6 @@
 export default {
     name: 'App',
     components: {},
-    // components: {
-    //     indexPage,
-    // },
 };
 </script>
 
