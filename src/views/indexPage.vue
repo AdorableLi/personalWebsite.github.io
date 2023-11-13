@@ -31,6 +31,10 @@ export default {
                 name: '电子木鱼',
                 path: 'muyu',
             },
+            {
+                name: '3D饼图',
+                path: 'show3dPie',
+            },
         ],
     }),
     mounted() {},

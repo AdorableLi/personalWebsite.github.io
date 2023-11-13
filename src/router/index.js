@@ -52,6 +52,11 @@ const routes = [
         name: 'muyu',
         component: () => import('../views/muyu.vue'),
     },
+    {
+        path: '/show3dPie',
+        name: 'show3dPie',
+        component: () => import('../views/show3dPie.vue'),
+    },
 ];
 
 const router = createRouter({
