@@ -1,6 +1,7 @@
+<!-- 采用高度变形法，会有性能问题 -->
 <template>
     <div class="cube-shell">
-        <div class="num" :style="{ top: `calc(100px - ${cubeObj.percentage}px)` }" v-show="cubeObj.percentage || cubeObj.percentage === 0">
+        <div class="num" :style="{ top: `calc(100px - ${cubeObj.percentage}px)` }" v-show="cubeObj.percentage">
             <div>{{ cubeObj.number }}</div>
             <p>{{ cubeObj.unit }}</p>
         </div>
@@ -11,7 +12,7 @@
                 <div class="right"></div>
                 <div class="up"></div>
 
-                <div class="cube cube2" v-show="showSmallCube">
+                <div class="cube cube2">
                     <div class="front"></div>
                     <div class="right"></div>
                     <div class="up"></div>
@@ -19,22 +20,20 @@
             </div>
         </div>
 
-        <!-- <div class="title">
+        <div class="title">
             {{ cubeObj.title }}
-            <Tooltip v-if="el.tooltip" placement="bottom-start">
+            <!-- <Tooltip v-if="el.tooltip" placement="bottom-start">
                 <i class="iconfont icon-wenhao" style="color: white; font-size: 12px; margin-left: 4px"></i>
                 <div slot="content">{{ el.tooltip }}</div>
-            </Tooltip>
-        </div> -->
+            </Tooltip> -->
+        </div>
     </div>
 </template>
 
 <script>
 export default {
     name: 'cube',
-    data: () => ({
-        showSmallCube: false,
-    }),
+    data: () => ({}),
     props: {
         defaultNum: {
             type: Number,
@@ -55,13 +54,8 @@ export default {
     computed: {
         cssVars() {
             let { color, percentage } = this.cubeObj;
-            this.showSmallCube = percentage;
-            if (!percentage) percentage = 0.01;
-            this.cubeObj.percentage = percentage;
-            const _top = `${50 + (100 - percentage) * 1.05}`;
             return {
-                '--startHeight': `${2 * 100 - _top}px`, // 用于动画起始点的高度
-                '--top': `${_top}px`, // 别动这个计算，炼丹就对了
+                '--top': `${50 + (100 - percentage) * 1.05}px`, // 别动这个计算，炼丹就对了
                 '--status': percentage ? 'running' : 'paused',
                 '--percentageNum': `${percentage / 100}`,
                 // '--percentageNum': percentage ? `${percentage / 100}` : 0.001,
@@ -86,9 +80,8 @@ export default {
     padding: 0;
 }
 .cube-shell {
-    width: 170px;
-    height: 220px;
-    position: relative;
+    width: 200px;
+    height: 250px;
 
     .num {
         font-size: 28px;
@@ -113,20 +106,12 @@ export default {
         color: white;
     }
 
-    .up {
-        transform: translateY(-50px) rotateX(90deg);
-        border: 1px solid rgba($color: var(--color), $alpha: 0.9);
-    }
-
     .container {
         perspective: 2200px;
         perspective-origin: center -1000px;
         position: absolute;
         top: var(--top);
-        left: 50%;
-        transform: translateX(-34px);
-        animation: donghua 1s ease var(--status);
-        transform-origin: bottom right;
+        left: 64px;
 
         .cube {
             /* 设置子元素位于3D空间中 */
@@ -157,19 +142,36 @@ export default {
             }
 
             > .front {
+                animation: front1 2.5s ease var(--status);
                 border: 1px solid rgba($color: var(--color), $alpha: 0.9);
                 transform: translateZ(50px);
             }
 
+            // > .left {
+            //     animation: left1 2.5s ease var(--status);
+            //     transform: translateX(var(--percentageTranNegative)) rotateY(-90deg);
+            // }
+
             > .right {
+                animation: right1 2.5s ease var(--status);
                 transform: translateX(50px) rotateY(90deg);
                 border: 1px solid rgba($color: var(--color), $alpha: 0.9);
             }
 
+            // > .back {
+            //     animation: back1 2.5s ease var(--status);
+            //     transform: translateZ(var(--percentageTranNegative));
+            // }
+
             > .up {
+                animation: up1 2.5s ease var(--status);
                 transform: translateY(-50px) rotateX(90deg);
                 border: 1px solid rgba($color: var(--color), $alpha: 0.9);
             }
+
+            // > .down {
+            //     transform: translateY(var(--percentageTran)) rotateX(-90deg);
+            // }
         }
 
         .cube2 {
@@ -177,6 +179,7 @@ export default {
             position: relative;
             top: 16px;
             left: 13px;
+            // bottom: -15px;
 
             div {
                 width: 74px;
@@ -185,30 +188,146 @@ export default {
             }
 
             > .front {
+                animation: front2 2.5s ease var(--status);
                 transform: translateZ(37px);
                 background: linear-gradient(to top, rgba($color: var(--color), $alpha: 0.65) 0, transparent 100%);
             }
 
+            // > .left {
+            //     animation: left2 2.5s ease var(--status);
+            //     transform: translateX(var(--percentageSmallTranNegative)) rotateY(-90deg);
+            // }
+
             > .right {
+                animation: right2 2.5s ease var(--status);
                 transform: translateX(37px) rotateY(90deg);
                 background: linear-gradient(to top, rgba($color: var(--color), $alpha: 0.65) 0, transparent 100%);
             }
 
+            // > .back {
+            //     animation: back2 2.5s ease var(--status);
+            //     transform: translateZ(var(--percentageSmallTranNegative));
+            // }
+
             > .up {
+                animation: up2 2.5s ease var(--status);
                 background: rgba(var(--color), $alpha: 0.65);
                 transform: translateY(-37px) rotateX(90deg);
             }
+
+            // > .down {
+            //     transform: translateY(37px) rotateX(-90deg);
+            // }
         }
     }
 }
-// 缩放动画
-@keyframes donghua {
+// 大正方体动画
+@keyframes front1 {
     0% {
-        transform: translateX(-34px) translateY(var(--startHeight)) scaleY(0);
+        height: 0;
+        transform: translateZ(50px) translateY(100px);
     }
 
     100% {
-        transform: translateX(-34px) translateY(0) scaleY(100px);
+        height: 100px;
+        transform: translateZ(50px) translateY(0);
+    }
+}
+// @keyframes left1 {
+//     0% {
+//         height: 0;
+//         transform: translateX(var(--percentageTranNegative)) translateY(100px) rotateY(-90deg);
+//     }
+
+//     100% {
+//         height: var(--percentage);
+//         transform: translateX(var(--percentageTranNegative)) translateY(0) rotateY(-90deg);
+//     }
+// }
+@keyframes right1 {
+    0% {
+        height: 0;
+        transform: translateX(50px) translateY(100px) rotateY(90deg);
+    }
+
+    100% {
+        height: 100px;
+        transform: translateX(50px) translateY(0) rotateY(90deg);
+    }
+}
+// @keyframes back1 {
+//     0% {
+//         height: 0;
+//         transform: translateZ(var(--percentageTranNegative)) translateY(100px);
+//     }
+
+//     100% {
+//         height: var(--percentage);
+//         transform: translateZ(var(--percentageTranNegative)) translateY(0);
+//     }
+// }
+@keyframes up1 {
+    0% {
+        transform: translateY(-50px) translateY(100px) rotateX(90deg);
+    }
+
+    100% {
+        transform: translateY(-50px) translateY(0) rotateX(90deg);
+    }
+}
+
+// 小正方体动画
+@keyframes front2 {
+    0% {
+        height: 0;
+        transform: translateZ(37px) translateY(100px);
+    }
+
+    100% {
+        height: 74px;
+        transform: translateZ(37px) translateY(0);
+    }
+}
+// @keyframes left2 {
+//     0% {
+//         height: 0;
+//         transform: translateX(var(--percentageSmallTranNegative)) translateY(100px) rotateY(-90deg);
+//     }
+
+//     100% {
+//         height: 74px;
+//         transform: translateX(var(--percentageSmallTranNegative)) translateY(0) rotateY(-90deg);
+//     }
+// }
+@keyframes right2 {
+    0% {
+        height: 0;
+        transform: translateX(37px) translateY(100px) rotateY(90deg);
+    }
+
+    100% {
+        height: 74px;
+        transform: translateX(37px) translateY(0) rotateY(90deg);
+    }
+}
+// @keyframes back2 {
+//     0% {
+//         height: 0;
+//         transform: translateZ(var(--percentageSmallTranNegative)) translateY(100px);
+//     }
+
+//     100% {
+//         height: var(--percentageSmall);
+//         transform: translateZ(var(--percentageSmallTranNegative)) translateY(0);
+//     }
+// }
+@keyframes up2 {
+    0% {
+        transform: translateY(-37px) translateY(100px) rotateX(90deg);
+    }
+
+    100% {
+        transform: translateY(-37px) translateY(0) rotateX(90deg);
     }
 }
 </style>

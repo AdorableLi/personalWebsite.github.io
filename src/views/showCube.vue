@@ -61,8 +61,8 @@ export default {
                     id: 3,
                     unit: '人', // 单位
                     color: '254, 224, 102', // 立方体颜色
-                    number: 33, // 人数
-                    percentage: 100, // 数据的百分比（决定了立方体的高度）
+                    number: 0, // 人数
+                    percentage: 0, // 数据的百分比（决定了立方体的高度）
                     title: '字段名3', // 字段名
                     introduce: '字段名介绍333', // 字段名介绍
                 },
